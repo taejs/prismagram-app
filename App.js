@@ -1,12 +1,18 @@
 import React, {useState , useEffect} from 'react';
 import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import {Asset} from 'expo-asset';
 import { Ionicons} from '@expo/vector-icons';
-import {AppLoading, Font, Assets} from 'expo';
+import {AppLoading} from 'expo';
+import * as Font from 'expo-font';
 import { InMemoryCache} from 'apollo-cache-inmemory';
 import {persistCache} from 'apollo-cache-persist';
 import ApolloClient from 'apollo-boost'
 import apolloClientOptions from './apollo';
-import {ApolloProvider} from 'react-apollo-hooks'
+import {ApolloProvider} from 'react-apollo-hooks';
+import {ThemeProvider} from 'styled-components';
+import style from './styles';
+import NavControllers from './components/NavControllers';
+import {AuthProvider} from './AuthContext';
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -40,11 +46,13 @@ export default function App() {
   return (
     loaded && client?
     <ApolloProvider client={client}>
-    <View>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-    </ApolloProvider>:
-    <AppLoading />
+      <ThemeProvider theme={style}>
+        <AuthProvider>
+          <NavControllers></NavControllers>
+        </AuthProvider>
+      </ThemeProvider>
+    </ApolloProvider>
+    : <AppLoading />
   );
 }
 
